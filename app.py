@@ -3,6 +3,8 @@ import yt
 from openai import OpenAI
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # ---- CONFIGURATION ----
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
