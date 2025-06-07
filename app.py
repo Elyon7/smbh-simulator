@@ -5,7 +5,8 @@ from pathlib import Path
 import os
 
 # ---- CONFIGURATION ----
-client = OpenAI()  # Usa OPENAI_API_KEY dall'ambiente
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 DATA_PATH = Path("/workspaces/smbh-simulator/simulation_data")
 IMAGE_PATH = Path("/workspaces/smbh-simulator/pre_rendered_plots")
 PLOT_OUTPUT = "output_plot.png"
