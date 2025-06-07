@@ -1,11 +1,11 @@
 import streamlit as st
 import yt
-import openai
+from openai import OpenAI
 from pathlib import Path
 import os
 
 # ---- CONFIGURATION ----
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI()  # Usa OPENAI_API_KEY dall'ambiente
 DATA_PATH = Path("/workspaces/smbh-simulator/simulation_data")
 IMAGE_PATH = Path("/workspaces/smbh-simulator/pre_rendered_plots")
 PLOT_OUTPUT = "output_plot.png"
@@ -18,14 +18,14 @@ def plot_slice(filename, field="density", axis="z"):
     slc.save(".")  # Save to current directory
     return PLOT_OUTPUT
 
-# ---- FUNCTION: AI Tutor Dialogue ----
+# ---- FUNCTION: AI Tutor Dialogue (updated for openai>=1.0.0) ----
 def ask_ai(prompt):
     messages = [
         {"role": "system", "content": "You are an astrophysics tutor guiding students through black hole simulations. Ask questions and give suggestions to help them think like a scientist."},
         {"role": "user", "content": prompt}
     ]
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4-turbo",
             messages=messages
         )
@@ -41,7 +41,7 @@ st.title("🕳️ SMBH Simulation Explorer with AI Tutor")
 use_image = st.sidebar.checkbox("Use pre-rendered media instead of .phdf")
 
 # ---------- PRE-RENDERED MEDIA ----------
-selected_media = None  # default
+selected_media = None
 if use_image:
     st.sidebar.header("1. Select Pre-rendered Media")
     media_files = sorted(IMAGE_PATH.glob("*"))  # .png, .gif, .mp4
